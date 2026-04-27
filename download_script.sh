@@ -8,6 +8,12 @@ while IFS= read -r line; do
   # 提取相对路径（去掉基准URL）
   path=$(echo "$url" | sed 's|https://doctrine-of-signatures.net/||')
   
+  # 跳过目录（以/结尾的）
+  if [[ "$path" == */ ]]; then
+    echo "Skipping directory: $path"
+    continue
+  fi
+  
   # 创建目录
   mkdir -p "$(dirname "$path")"
   
@@ -15,4 +21,4 @@ while IFS= read -r line; do
   curl -o "$path" "$url"
   
   echo "Downloaded: $path"
-done < static-resource-list.txt
+done < target/static-resource-list.txt
